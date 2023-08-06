@@ -1,6 +1,9 @@
 import { AppBar, Box, IconButton, Toolbar } from "@mui/material";
 import PhishingIcon from '@mui/icons-material/Phishing';
-import Face2Icon from '@mui/icons-material/Face2';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import PersonIcon from '@mui/icons-material/Person';
+import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
+import NightlightRoundIcon from '@mui/icons-material/NightlightRound';
 
 function AppHeader() {
     
@@ -10,29 +13,19 @@ function AppHeader() {
                 <IconButton color="secondary">
                     <PhishingIcon />
                 </IconButton>
-                <Box
-                    component='img'
-                    sx={styles.appLogo}
-                    src='/src/assets/thumbnail.png' />
-                <Box
-                    component='img'
-                    sx={styles.appLogo}
-                    src='/src/assets/study-icon.png' />
+                <Box>PhishNet</Box>
                 <Box sx={{ flexGrow: 1 }} />
-                <Box
-                    component='img'
-                    sx={styles.appLogo}
-                    src='/src/assets/study-icon2.png' />
-                <Box
-                    component='img'
-                    sx={styles.appLogo}
-                    src='/src/assets/sample-logo.png' />
-                <Box
-                    component='img'
-                    sx={styles.appLogo}
-                    src='/src/assets/thumbnail2.png' />
                 <IconButton title='Settings' color="secondary">
-                    <Face2Icon />
+                    <NightlightRoundIcon />
+                </IconButton>
+                <IconButton title='Settings' color="secondary">
+                    <PersonIcon />
+                </IconButton>
+                <IconButton title='Settings' color="secondary">
+                    <AppSettingsAltIcon />
+                </IconButton>
+                <IconButton title='Settings' color="secondary">
+                    <AdminPanelSettingsIcon />
                 </IconButton>
             </Toolbar>
         </AppBar>

@@ -25,8 +25,8 @@ function SideNav() {
                 <Avatar sx={styles.avatar} alt='Channel Name' src="src/assets/sample-logo.png"
                     onClick={() => setCollapsed(!collapsed)}
                 />
-                {!collapsed ? <Typography variant='body2' sx={styles.yourChannel}>Your Channel</Typography> : null}
-                {!collapsed ? <Typography variant='overline'>Derp</Typography> : null}
+                {!collapsed ? <Typography variant='body2' sx={styles.yourChannel}>PhishNet</Typography> : null}
+                {!collapsed ? <Typography variant='overline'>username</Typography> : null}
             </Box>
             <Menu menuItemStyles={{
                 button: ({active}) => {
@@ -42,7 +42,13 @@ function SideNav() {
                     <Typography variant='body2'>Analytics</Typography>
                 </MenuItem>
                 <MenuItem active={location.pathname == '/contents'} component={<Link to="/contents" />} icon={<SubjectIcon />}>
-                    <Typography variant='body2'>Contents</Typography>
+                    <Typography variant='body2'>Scan</Typography>
+                </MenuItem>
+                <MenuItem active={location.pathname == '/contents'} component={<Link to="/contents" />} icon={<SubjectIcon />}>
+                    <Typography variant='body2'>Latest News</Typography>
+                </MenuItem>
+                <MenuItem active={location.pathname == '/customisation'} component={<Link to="/customisation" />} icon={<AcUnitIcon />}>
+                    <Typography variant='body2'>Email Settings</Typography>
                 </MenuItem>
                 <MenuItem active={location.pathname == '/customisation'} component={<Link to="/customisation" />} icon={<AcUnitIcon />}>
                     <Typography variant='body2'>Customisation</Typography>
