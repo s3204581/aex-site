@@ -1,271 +1,93 @@
-import { Avatar, Box, Card, CardContent, Divider, Typography } from "@mui/material";
-import ColourText from "../../components/ColourText";
-import LatestVideoCard from "../../components/LatestVideoCard";
+import React from 'react';
+import {
+  Container, Typography, Paper, Grid, Box, ListItem, ListItemText
+} from '@mui/material';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import PieChartIcon from '@mui/icons-material/PieChart';
+import ListIcon from '@mui/icons-material/List';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, Legend } from 'recharts';
 
-function Dashboard() {
-    return <Box>
-        <Typography sx={styles.pageTitle} variant="h5">Channel Dashboard</Typography>
-        <Box sx={styles.columnsContainer}>
+// Mocked data
+const growthData = [
+    {year: '2020', growth: 12},
+    {year: '2021', growth: 16},
+    {year: '2022', growth: 18},
+    {year: '2023', growth: 20},
+];
 
-            <LatestVideoCard sx={styles.item} />
-            <Card sx={styles.item}>
-                <CardContent>
-                    <Typography variant="cardTitle">Latest post</Typography>
-                    <Box sx={styles.postAuthorSection}>
-                        <Avatar sx={styles.avatar} alt="Masoud" src="src/assets/avatars/masoud.jpeg" />
-                        <Typography sx={styles.postMeta}>React with Masoud</Typography>
-                        <Typography sx={styles.postMeta}>Jan 19, 2023</Typography>
-                    </Box>
-                    <Typography variant="body2">I asked chatGPT to tell me a joke about react js, he is not only smart but also funny :)) we are going to have a video about it tomorrow.</Typography>
-                    <Divider sx={styles.divider} />
-                    <Box sx={styles.postStats}>
-                        <Typography variant="body2">Likes</Typography>
-                        <Typography variant="body2">Comments</Typography>
-                        <Typography variant="h6">12</Typography>
-                        <Typography variant="h6">6</Typography>
-                    </Box>
+const methodsData = [
+    {name: 'Spear phishing', value: 400},
+    {name: 'Vishing', value: 300},
+    {name: 'Whaling', value: 150},
+];
 
-                    <Typography sx={styles.cardAction} variant="link">GO TO COMMUNITY TAB</Typography>
-                </CardContent>
-            </Card>
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-            <Card sx={styles.item}>
-                <CardContent>
-                    <Typography variant="cardTitle">Channel analytics</Typography>
-                    <Typography variant="h7">Current Subscribers</Typography>
-                    <Typography variant="h4">4,144</Typography>
-                    <Typography variant="h7"><ColourText color='green.main'>+77</ColourText> <ColourText color='neutral.normal'>in last 28 days</ColourText></Typography>
-                    <Divider sx={styles.divider} />
-                    <Typography variant="h6">Summary</Typography>
-                    <Typography variant="h8"><ColourText color='neutral.normal'>Last 28 days</ColourText></Typography>
-                    <Box sx={styles.videoStatsRow}>
-                        <Typography variant="h7">Views</Typography>
-                        <Typography variant="h7">225</Typography>
-                    </Box>
-                    <Box sx={styles.videoStatsRow}>
-                        <Typography variant="h7">Watch Time (hours)</Typography>
-                        <Typography variant="h7">30</Typography>
-                    </Box>
-                    <Box sx={styles.videoStatsRow}>
-                        <Typography variant="h7">Estimated Revenue</Typography>
-                        <Typography variant="h7">$450.00</Typography>
-                    </Box>
-                    <Divider sx={styles.divider} />
-                    <Typography variant="h6">Top videos</Typography>
-                    <Typography variant="h8"><ColourText color='neutral.normal'>Last 48 hours . Views</ColourText></Typography>
-                    <Box sx={styles.videoStatsRow}>
-                        <Typography variant="h7">How to become a software developer in 2023</Typography>
-                        <Typography variant="h7">450</Typography>
-                    </Box>
-                    <Box sx={styles.videoStatsRow}>
-                        <Typography variant="h7">CSS GRID Tutorial: How to use Grids to make awesome user interface.</Typography>
-                        <Typography variant="h7">287</Typography>
-                    </Box>
-                    <Box sx={styles.videoStatsRow}>
-                        <Typography variant="h7">Call APIS in React Native: Practical Guide</Typography>
-                        <Typography variant="h7">130</Typography>
-                    </Box>
+function ReportsPage() {
+    return (
+        <Container style={{ marginTop: '40px' }}>
+            <Typography variant="h4" gutterBottom>
+                Phishing Trends & Statistics
+            </Typography>
 
-                    <Typography sx={styles.cardAction} variant="link">GO TO VIDEO ANALYTICS</Typography>
-                </CardContent>
-            </Card>
-            <Card sx={styles.item}>
-                <CardContent>
-                    <Typography variant="cardTitle">Latest comments</Typography>
-                    <ColourText color="neutral.normal"><Typography variant="h7">Channel comments I haven't responded to</Typography></ColourText>
-
-                    <Box sx={styles.commentRow}>
-                        <Avatar sx={styles.avatar} alt="Masoud" src="src/assets/avatars/masoud.jpeg" />
-                        <Box>
-                            <Box sx={styles.commentDetailsSection}>
-                                <Typography sx={styles.postMeta}>React with Masoud</Typography>
-                                <Typography sx={styles.postMeta}>2 weeks ago</Typography>
-                            </Box>
-
-                            <Typography sx={styles.commentText}>
-                                Get tips from a successful creator on how to take a YouTube channel and turn it into a business that earns you money
-                            </Typography>
+            <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                    <Paper elevation={3} style={{ padding: '20px' }}>
+                        <Box display="flex" alignItems="center" marginBottom="20px">
+                            <TrendingUpIcon color="primary" style={{ marginRight: '10px' }} />
+                            <Typography variant="h6">Phishing Growth Rate</Typography>
                         </Box>
-                        <Box
-                            component="img"
-                            sx={styles.videoThumbnail}
-                            src="src/assets/thumbnail.png"
-                        />
+                        <BarChart width={300} height={200} data={growthData}>
+                            <XAxis dataKey="year" />
+                            <YAxis />
+                            <Tooltip />
+                            <Bar dataKey="growth" fill="#8884d8" />
+                        </BarChart>
+                    </Paper>
+                </Grid>
 
-                    </Box>
-                    <Divider sx={styles.divider} />
-                    <Box sx={styles.commentRow}>
-                        <Avatar sx={styles.avatar} alt="Masoud" src="src/assets/avatars/masoud.jpeg" />
-
-                        <Box>
-                            <Box sx={styles.commentDetailsSection}>
-                                <Typography sx={styles.postMeta}>React with Masoud</Typography>
-                                <Typography sx={styles.postMeta}>2 weeks ago</Typography>
-                            </Box>
-
-                            <Typography sx={styles.commentText}>
-                                How can I deploy this?
-                            </Typography>
+                <Grid item xs={12} sm={6}>
+                    <Paper elevation={3} style={{ padding: '20px' }}>
+                        <Box display="flex" alignItems="center" marginBottom="20px">
+                            <PieChartIcon color="primary" style={{ marginRight: '10px' }} />
+                            <Typography variant="h6">Methods Used</Typography>
                         </Box>
-                        <Box
-                            component="img"
-                            sx={styles.videoThumbnail}
-                            src="src/assets/thumbnail.png"
-                        />
+                        <PieChart width={300} height={200}>
+                            <Pie data={methodsData} cx={150} cy={100} outerRadius={80} fill="#8884d8" dataKey="value">
+                                {methodsData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index]} />)}
+                            </Pie>
+                            <Legend />
+                            <Tooltip />
+                        </PieChart>
+                    </Paper>
+                </Grid>
 
-                    </Box>
-                    <Divider sx={styles.divider} />
-                    <Box sx={styles.commentRow}>
-                        <Avatar sx={styles.avatar} alt="Masoud" src="src/assets/avatars/masoud.jpeg" />
-                        <Box>
-                            <Box sx={styles.commentDetailsSection}>
-                                <Typography sx={styles.postMeta}>React with Masoud</Typography>
-                                <Typography sx={styles.postMeta}>2 weeks ago</Typography>
-                            </Box>
-
-                            <Typography sx={styles.commentText}>
-                                Thank you, was very helpful.
-                            </Typography>
+                <Grid item xs={12} sm={6}>
+                    <Paper elevation={3} style={{ padding: '20px' }}>
+                        <Box display="flex" alignItems="center" marginBottom="20px">
+                            <ListIcon color="primary" style={{ marginRight: '10px' }} />
+                            <Typography variant="h6">Statistics</Typography>
                         </Box>
-
-                        <Box
-                            component="img"
-                            sx={styles.videoThumbnail}
-                            src="src/assets/thumbnail.png"
-                        />
-
-                    </Box>
-
-
-                    <Typography sx={styles.cardAction} variant="link">VIEW MORE</Typography>
-                </CardContent>
-            </Card>
-
-            <Card sx={styles.item}>
-                <CardContent sx={styles.ideaContent}>
-                    <Box>
-                        <Typography variant="cardTitle">Ideas for you</Typography>
-                        <Typography sx={styles.ideaQuestion}>Ready to get business savvy?</Typography>
-                        <Typography variant="h7">
-                            Get tips from a successful creator on how to take a YouTube channel and turn it into a business that earns you money
-                        </Typography>
-                        <Typography sx={styles.cardAction} variant="link">GET STARTED NOW</Typography>
-                    </Box>
-                    <Box
-                        component="img"
-                        sx={styles.ideaImage}
-                        src="src/assets/study-icon.png"
-                    />
-                </CardContent>
-            </Card>
-
-            <Card sx={styles.item}>
-                <CardContent sx={styles.ideaContent}>
-                    <Box>
-                        <Typography variant="cardTitle">Creator Insider</Typography>
-                        <Box
-                            component="img"
-                            sx={styles.insiderImage}
-                            src="src/assets/thumbnail2.png"
-                        />
-                        <Typography sx={styles.ideaQuestion}>Ready to boost your skills using AI tools?</Typography>
-                        <Typography variant="h7">
-                            Get tips from a successful creator on how to take a YouTube channel and turn it into a business that earns you money
-                        </Typography>
-                        <Typography sx={styles.cardAction} variant="link">WATCH ON YOUTUBE</Typography>
-                    </Box>
-                </CardContent>
-            </Card>
-        </Box>
-    </Box>;
+                        <ListItem>
+                            <ListItemText primary="Total phishing attempts in 2023: 20,000" />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemText primary="Most targeted sector: Banking and Finance" />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemText primary="Increase in spear phishing: 18% from last year" />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemText primary="Most successful method: Email phishing" />
+                        </ListItem>
+                    </Paper>
+                </Grid>
+                
+            </Grid>
+            
+        </Container>
+    );
 }
 
-export default Dashboard;
-
-/**
- * @type {import("@mui/material").SxProps}
- */
-
-const styles = {
-    pageTitle: {
-        mb: 2
-    },
-    columnsContainer: {
-        columns: '280px 3',
-        maxWidth: 1400
-    },
-    item: {
-        mb: 2,
-    },
-    divider: {
-        my: 2
-    },
-    videoStatsRow: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        mt: 2,
-        '&:hover': {
-            color: 'primary.main',
-            cursor: 'pointer'
-        }
-    },
-    cardAction: {
-        mt: 2
-    },
-    ideaContent: {
-        display: 'flex',
-    },
-    ideaImage: {
-        width: 80,
-        alignSelf: 'center',
-        ml: 5
-    },
-    ideaQuestion: {
-        fontSize: '0.9rem',
-        fontWeight: 500,
-        my: 2
-    },
-    avatar: {
-        width: '30px',
-        height: 'auto',
-        marginRight: 1
-    },
-    postStats: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gridAutoRows: '25px'
-    },
-    postAuthorSection: {
-        display: 'flex',
-        alignItems: 'center',
-        my: 3
-    },
-    postMeta: {
-        mr: 1,
-        fontSize: '0.8rem',
-        color: 'neutral.normal'
-    },
-    videoThumbnail: {
-        width: 80,
-        ml: 'auto'
-    },
-    commentRow: {
-        display: 'flex',
-        alignItems: 'flex-start',
-        mt: 2
-    },
-    commentDetailsSection: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    commentText: {
-        fontSize: '0.8rem',
-        mt: 0.5,
-        mr: 2
-    },
-    insiderImage: {
-        width: '100%',
-        mt: 1
-    }
-}
-
+export default ReportsPage;
