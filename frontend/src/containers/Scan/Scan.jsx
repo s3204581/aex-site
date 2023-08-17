@@ -14,7 +14,7 @@ function EmailScanDropzone() {
         const formData = new FormData();
         formData.append('emailFile', file);
 
-        fetch('http://backend:3001/scan', {  
+        fetch('http://localhost:3001/scan', {  
             method: 'POST',
             body: formData
         })
@@ -35,7 +35,7 @@ function EmailScanDropzone() {
     }, []);
 
     const testConnection = () => {
-        fetch('http://backend:3001/test')
+        fetch('http://localhost:3001/test')
             .then(response => response.json())
             .then(data => {
                 setMessage(data.message);
