@@ -5,10 +5,10 @@ FROM node:16
 WORKDIR /app
 
 # Create uploads directory
-RUN mkdir -p /tmp/uploads
+RUN mkdir -p /app/uploads
 
 # Set the permissions for the directory
-RUN chmod 755 /tmp/uploads
+RUN chmod 777 /app/uploads
 
 # Copy package.json and package-lock.json first to leverage Docker cache
 # This will only re-run if these files change, not your entire codebase

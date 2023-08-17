@@ -11,7 +11,7 @@ app.use(cors());
 // Multer setup for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '/tmp/uploads') // specify the directory to save
+        cb(null, '/app/uploads') // specify the directory to save
     },
     filename: function (req, file, cb) {
         if (file && file.originalname) {
@@ -64,27 +64,36 @@ app.post('/scan', upload.single('emailFile'), async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ status: 'error', message: 'No file uploaded.' });
         }
-        console.log(req.file)
-        let file_path = req.file.path
-        // Now scan using the path
-        const { isInfected, file, viruses } = await clamscan.isInfected(file_path);
+        
+        if (fs.existsSync(req.file.path)) {
+            // proceed with scanning
+            const { isInfected, file, viruses } = await clamscan.isInfected(req.file.path);
+            if (isInfected) {
+                res.status(400).json({ 
+                    status: 'infected', 
+                    message: `The file ${file.originalname} is infected with ${viruses}!` 
+                });
+            } else {
+                res.status(200).json({ 
+                    status: 'clean', 
+                    message: `The file ${file.originalname} is clean.` 
+                });
+            }
+        } else {
+            console.log("fs.existsSync error")
+        }
+        
+
+        
+        
+        
 
         // After scanning, you can delete the file if it's not needed
         // fs.unlink(req.file.path, err => {
         //     if(err) console.error('Error deleting file:', err);
         // });
 
-        if (isInfected) {
-            res.status(400).json({ 
-                status: 'infected', 
-                message: `The file ${file.originalname} is infected with ${viruses}!` 
-            });
-        } else {
-            res.status(200).json({ 
-                status: 'clean', 
-                message: `The file ${file.originalname} is clean.` 
-            });
-        }
+       
 
     } catch (err) {
         res.status(500).json({ 
@@ -95,8 +104,10 @@ app.post('/scan', upload.single('emailFile'), async (req, res) => {
 });
 
 
-app.get('/test', (req, res) => {
-    res.json({ message: 'Backend is connected!' });
+app.get('/test', async (req, res) => {
+    let file_path = '/app/uploads/emailFile.msg'
+    const { isInfected, file, viruses } = await clamscan.isInfected(file_path);
+    res.json({ message: isInfected });
 });
 
 
