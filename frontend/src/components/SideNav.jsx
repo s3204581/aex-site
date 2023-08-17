@@ -52,6 +52,9 @@ function SideNav() {
                 <MenuItem active={location.pathname == '/settings'} component={<Link to="/settings" />} icon={<SettingsIcon />}>
                     <Typography variant='body2'>Settings</Typography>
                 </MenuItem>
+                <MenuItem active={location.pathname == '/test'} component={<Link to="/test" />} icon={<SettingsIcon />}>
+                    <Typography variant='body2'>express test</Typography>
+                </MenuItem>
 
             </Menu>
         </Sidebar>

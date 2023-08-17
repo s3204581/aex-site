@@ -23,6 +23,4 @@ services:
     image: mkodockx/docker-clamav:alpine
     ports:
       - "3310:3310"
-    volumes:
-      - ./clamav-data:/var/lib/clamav
 

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Container, Paper, Typography, Box, Icon, Snackbar } from '@mui/material';
+import { Container, Paper, Typography, Box, Icon, Snackbar, Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Alert from '@mui/material/Alert';
 
@@ -14,7 +14,7 @@ function EmailScanDropzone() {
         const formData = new FormData();
         formData.append('emailFile', file);
 
-        fetch('http://backend:3001/scan', {  // '/scan' should be your Express endpoint for scanning
+        fetch('http://backend:3001/scan', {  
             method: 'POST',
             body: formData
         })
@@ -33,6 +33,19 @@ function EmailScanDropzone() {
             setSeverity('error');
         });
     }, []);
+
+    const testConnection = () => {
+        fetch('http://backend:3001/test')
+            .then(response => response.json())
+            .then(data => {
+                setMessage(data.message);
+                setSeverity('info');
+            })
+            .catch(error => {
+                setMessage('Failed to connect to backend.');
+                setSeverity('error');
+            });
+    };
 
     const handleClose = () => {
         setMessage(null);
@@ -58,6 +71,9 @@ function EmailScanDropzone() {
                     <Typography variant="body2" style={{ marginTop: '8px', color: 'gray' }}>
                         Supported formats: .eml, .msg
                     </Typography>
+                </Box>
+                <Box style={{ marginTop: '20px' }}>
+                    <Button variant="contained" onClick={testConnection}>Test Connection to Backend</Button>
                 </Box>
             </Paper>
             <Snackbar open={message !== null} autoHideDuration={6000} onClose={handleClose}>
