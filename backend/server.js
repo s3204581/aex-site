@@ -1,10 +1,13 @@
 const express = require('express');
 const fs = require('fs')
+const path = require('path');
 const multer = require('multer');
 const NodeClam = require('clamscan');
 const cors = require('cors'); 
+const { clear } = require('console');
 const app = express();
 const port = 3001;
+const UPLOADS_DIR = '/app/uploads'
 
 app.use(cors()); 
 
@@ -23,6 +26,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+const clearUploadsDirectory = (directory) => {
+    fs.readdir(directory, (err, files) => {
+        if (err) throw err;
+
+        for (const file of files) {
+            fs.unlink(path.join(directory, file), err => {
+                if (err) throw err;
+            });
+        }
+    });
+}
+
+
 const options = {
     clamdscan: {
         socket: null,  
@@ -40,11 +56,9 @@ const options = {
 };
 
 let clamscan
-
 const ClamScan = new NodeClam().init(options);
 
  
-
 ClamScan.then(async cs => {
     try {
         clamscan = cs;
@@ -56,6 +70,19 @@ ClamScan.then(async cs => {
     }
 }).catch(err => {
     console.error(`Error initializing NodeClam: ${err.message}`);
+});
+
+app.get('/list-uploads', (req, res) => {
+    fs.readdir(UPLOADS_DIR, (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to read directory' });
+        }
+        res.json(files);
+    });
+});
+
+app.get('/clear-files', (req, res) => {
+    clearUploadsDirectory(UPLOADS_DIR)
 });
 
 
@@ -83,18 +110,6 @@ app.post('/scan', upload.single('emailFile'), async (req, res) => {
             console.log("fs.existsSync error")
         }
         
-
-        
-        
-        
-
-        // After scanning, you can delete the file if it's not needed
-        // fs.unlink(req.file.path, err => {
-        //     if(err) console.error('Error deleting file:', err);
-        // });
-
-       
-
     } catch (err) {
         res.status(500).json({ 
             status: 'error', 
@@ -103,14 +118,26 @@ app.post('/scan', upload.single('emailFile'), async (req, res) => {
     }
 });
 
-
 app.get('/test', async (req, res) => {
-    let file_path = '/app/uploads/emailFile.msg'
-    const { isInfected, file, viruses } = await clamscan.isInfected(file_path);
-    res.json({ message: isInfected });
+    let results = [];
+    try {
+        const files = fs.readdirSync(UPLOADS_DIR);
+
+        for (const file of files) {
+            let file_path = path.join(UPLOADS_DIR, file);
+            const { isInfected, file: scannedFile, viruses } = await clamscan.isInfected(file_path);
+            
+            results.push({
+                file: scannedFile,
+                isInfected: isInfected,
+                viruses: viruses
+            });
+        }
+        res.json(results);
+    } catch (error) {
+        res.status(500).json({ message: 'Error scanning files', error: error.message });
+    }
 });
-
-
 
 app.listen(port, () => {
     console.log(`Server started on http://localhost:${port}`);
