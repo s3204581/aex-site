@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Container, Paper, Typography, Box, Icon, Snackbar, Button, Card, List, ListItem } from '@mui/material';
+import { Container, Paper, Typography, Box, Icon, Snackbar, Button, Card, CardContent, List, ListItem } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Alert from '@mui/material/Alert';
 
@@ -8,13 +8,24 @@ function EmailScanDropzone() {
     const [message, setMessage] = useState(null);
     const [severity, setSeverity] = useState('info');
     const [files, setFiles] = useState([]);
+    const [scanResults, setScanResults] = useState([]);
 
-    useEffect(() => {
-        fetch('http://localhost:3001/list-uploads')
-            .then(response => response.json())
-            .then(data => setFiles(data))
-            .catch(error => console.error('Error fetching uploaded files:', error));
-    }, [])
+
+    const updateFiles = async () => {
+        try {
+            const response = await fetch('http://localhost:3001/list-uploads');
+            const data = await response.json();
+            if (Array.isArray(data.files)) {
+                setFiles(data.files);
+            } else {
+                console.warn("Received unexpected data format from server:", data);
+                setFiles([]);
+            }
+        } catch (error) {
+            console.error("Error fetching files:", error);
+            setFiles([]);
+        }
+    };
 
     const onDrop = useCallback(acceptedFiles => {
         const file = acceptedFiles[0];  // Assuming one file at a time
@@ -39,6 +50,7 @@ function EmailScanDropzone() {
                 setMessage('An error occurred while scanning.');
                 setSeverity('error');
             });
+        updateFiles()
     }, []);
 
     const manualScan = () => {
@@ -47,6 +59,7 @@ function EmailScanDropzone() {
             .then(data => {
                 setMessage(data.message);
                 setSeverity('info');
+                setScanResults(data);
             })
             .catch(error => {
                 setMessage('Failed to connect to backend.');
@@ -55,6 +68,8 @@ function EmailScanDropzone() {
     };
     const clearFiles = () => {
         fetch('http://localhost:3001/clear-files')
+        setFiles([])
+        setScanResults([]);
     };
 
 
@@ -95,10 +110,25 @@ function EmailScanDropzone() {
                         ))}
                     </List>
                 </Card>
+                <Card elevation={3} style={{ marginTop: '20px' }}>
+                    <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                            Scan Results
+                        </Typography>
+                        <List>
+                            {scanResults.map(result => (
+                                <ListItem key={result.file}>
+                                    <Typography variant="body1">
+                                        File: {result.file} -
+                                        Status: {result.isInfected ? 'Infected' : 'Clean'} {result.isInfected ? `(Viruses: ${result.viruses.join(', ')})` : ''}
+                                    </Typography>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </CardContent>
+                </Card>
                 <Box style={{ marginTop: '20px' }}>
-                    <Button variant="contained" onClick={manualScan}>Manual Scan</Button>
-                </Box>
-                <Box style={{ marginTop: '20px' }}>
+                    <Button variant="contained" onClick={manualScan} style={{ marginRight: '10px' }}>Manual Scan</Button>
                     <Button variant="contained" onClick={clearFiles}>Clear Files</Button>
                 </Box>
             </Paper>

@@ -1,5 +1,6 @@
 # Step 1: Build the React application
 FROM node:16 AS build
+COPY ./src/assets/* /usr/share/nginx/html/src/assets/
 WORKDIR /app
 COPY package*.json ./
 RUN npm install

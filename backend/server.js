@@ -29,7 +29,6 @@ const upload = multer({ storage: storage });
 const clearUploadsDirectory = (directory) => {
     fs.readdir(directory, (err, files) => {
         if (err) throw err;
-
         for (const file of files) {
             fs.unlink(path.join(directory, file), err => {
                 if (err) throw err;
@@ -77,7 +76,7 @@ app.get('/list-uploads', (req, res) => {
         if (err) {
             return res.status(500).json({ error: 'Failed to read directory' });
         }
-        res.json(files);
+        res.json({ files: files });
     });
 });
 
